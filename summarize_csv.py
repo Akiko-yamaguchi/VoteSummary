@@ -150,7 +150,7 @@ def main():
 
         detail_df[voter_label] = statuses
 
-    detail_df.to_csv(OUTPUT_DETAIL_CSV, index=False, encoding="utf-8-sig")
+    detail_df.to_csv(BASE_DIR / OUTPUT_DETAIL_CSV, index=False, encoding="utf-8-sig")
 
     # --------------------------------------------------------
     # 3. 集計表を作る
@@ -176,7 +176,7 @@ def main():
         ascending=[False, False, False]
     )
 
-    with pd.ExcelWriter(OUTPUT_EXCEL, engine="openpyxl") as writer:
+    with pd.ExcelWriter(BASE_DIR / OUTPUT_EXCEL, engine="openpyxl") as writer:
         summary_df.to_excel(writer, sheet_name="集計", index=False)
         summary_sorted_df.to_excel(writer, sheet_name="投票率順", index=False)
         detail_df.to_excel(writer, sheet_name="回答一覧", index=False)
@@ -184,7 +184,7 @@ def main():
     # --------------------------------------------------------
     # 4. Excelの見た目を整える
     # --------------------------------------------------------
-    wb = load_workbook(OUTPUT_EXCEL)
+    wb = load_workbook(BASE_DIR / OUTPUT_EXCEL)
 
     header_fill = PatternFill(fill_type="solid", fgColor="D9EAF7")
     warning_fill = PatternFill(fill_type="solid", fgColor="FFF2CC")
@@ -224,12 +224,12 @@ def main():
             if cell.value == "エラー":
                 cell.fill = error_fill
 
-    wb.save(OUTPUT_EXCEL)
+    wb.save(BASE_DIR / OUTPUT_EXCEL)
 
     # --------------------------------------------------------
     # 5. ログ出力
     # --------------------------------------------------------
-    with open(LOG_FILE, "w", encoding="utf-8") as fp:
+    with open(BASE_DIR / LOG_FILE, "w", encoding="utf-8") as fp:
         fp.write("\n".join(log_lines) + "\n")
 
     print(f"Done: {OUTPUT_DETAIL_CSV}, {OUTPUT_EXCEL}, {LOG_FILE}")
