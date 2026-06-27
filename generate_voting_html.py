@@ -18,7 +18,7 @@ if len(target_files) != 1:
 target_file = target_files[0]
 target_year = target_file.split('_')[0]
 
-df = pd.read_excel(target_file, index_col=None)
+df = pd.read_excel(BASE_DIR / target_file, index_col=None)
 header_values = df.columns
 list_from_df = df.values.tolist()
 
