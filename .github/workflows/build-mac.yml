@@ -1,0 +1,43 @@
+name: Build Mac App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --onefile --name summarize_csv summarize_csv.py
+
+      - name: Package
+        run: |
+          mkdir package
+          cp dist/summarize_csv package/
+          mkdir package/csv
+          echo "CSVファイルをこのcsvフォルダに入れてから summarize_csv を実行してください。" > package/README.txt
+          zip -r VoteSummary_Mac.zip package
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VoteSummary_Mac
+          path: VoteSummary_Mac.zip
