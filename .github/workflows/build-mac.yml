@@ -27,17 +27,23 @@ jobs:
       - name: Build with PyInstaller
         run: |
           pyinstaller --onefile --name summarize_csv summarize_csv.py
+          pyinstaller --onefile --name generate_voting_html generate_voting_html.py
 
       - name: Package
         run: |
-          mkdir package
-          cp dist/summarize_csv package/
-          mkdir package/csv
-          echo "CSVファイルをこのcsvフォルダに入れてから summarize_csv を実行してください。" > package/README.txt
-          zip -r VoteSummary_Mac.zip package
+          mkdir -p vote_tools/summarize_csv
+          cp dist/summarize_csv vote_tools/summarize_csv/
+          mkdir vote_tools/summarize_csv/csv
+          echo "CSVファイルをこのcsvフォルダに入れてから summarize_csv を実行してください。" > vote_tools/summarize_csv/README.txt
+
+          mkdir -p vote_tools/generate_voting_html
+          cp dist/generate_voting_html vote_tools/generate_voting_html/
+          echo "jinjaファイルとExcelファイルをこのフォルダに入れてから generate_voting_html を実行してください。" > vote_tools/generate_voting_html/README.txt
+
+          zip -r VoteTools_Mac.zip vote_tools
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: VoteSummary_Mac
-          path: VoteSummary_Mac.zip
+          name: VoteTools_Mac
+          path: VoteTools_Mac.zip
