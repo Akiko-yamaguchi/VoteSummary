@@ -1,8 +1,11 @@
 import os
 import glob
+import sys
+from pathlib import Path
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill
+
 
 # ============================================================
 # 設定
@@ -16,10 +19,16 @@ LOG_FILE = "log_summarize.txt"
 # N: 未審査、J: 審査済み・推薦なし、R: 審査済み・推薦あり
 VALID_RESULTS = {"N", "J", "R", ""}
 
-
 # ============================================================
 # CSV読み込み
 # ============================================================
+if getattr(sys, "frozen", False):
+    BASE_DIR = Path(sys.executable).parent
+else:
+    BASE_DIR = Path(__file__).resolve().parent
+ANSWER_DIR = BASE_DIR / "csv"
+
+
 def read_csv_safely(path):
     """日本語CSVでよく使う文字コードを順に試す。"""
     for enc in ["utf-8-sig", "utf-8", "cp932"]:
@@ -31,7 +40,7 @@ def read_csv_safely(path):
 
 
 def get_answer_files():
-    files = sorted(glob.glob(os.path.join(ANSWER_DIR, "*.csv")))
+    files = sorted(ANSWER_DIR.glob("*.csv"))
     if not files:
         raise FileNotFoundError(f"{ANSWER_DIR} フォルダ内にCSVファイルがありません。")
     return files
