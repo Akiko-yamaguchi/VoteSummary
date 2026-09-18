@@ -53,7 +53,7 @@ def check_format(df, path):
 
     if str(df.iloc[0, 0]).strip() != "氏名":
         raise ValueError(f"1行目1列目が『氏名』ではありません: {path}")
-    if str(df.iloc[0, 2]).strip() != "博士取得年":
+    if str(df.iloc[0, 4]).strip() != "博士取得年":
         raise ValueError(f"1行目3列目が『博士取得年』ではありません: {path}")
     if str(df.iloc[1, 0]).strip() != "発表者名":
         raise ValueError(f"2行目1列目が『発表者名』ではありません: {path}")
@@ -64,7 +64,7 @@ def check_format(df, path):
 def get_voter_label(df, path):
     """氏名_博士取得年 の形で回答者ラベルを作る。"""
     name = str(df.iloc[0, 1]).strip()
-    phd_year = str(df.iloc[0, 3]).strip().replace(".0", "") if df.shape[1] >= 4 else ""
+    phd_year = str(df.iloc[0, 5]).strip().replace(".0", "") if df.shape[1] >= 4 else ""
 
     if not name or name.lower() == "nan":
         name = os.path.splitext(os.path.basename(path))[0]
